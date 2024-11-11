@@ -9,6 +9,7 @@ const MongoStore = require('connect-mongo');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const sgMail = require('@sendgrid/mail');
+const bodyParser = require('body-parser');
 
 
 // SendGrid setup
