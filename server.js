@@ -32,7 +32,7 @@ app.use(express.static('public'));
 
 
 // MongoDB URI for session management
-const mongoUri = process.env.MONGODB_URI;
+const mongoURI = process.env.MONGO_URI + "?ssl=true";
 
 app.use(session({
     secret: process.env.SESSION_SECRET,
