@@ -264,9 +264,7 @@ app.post('/logout', (req, res) => {
 });
 
 
-mongoose.connect(mongoUri, { 
-    ssl: true
-})
+mongoose.connect(mongoUri)
     .then(() => {
         console.log('Connected to MongoDB');
         app.listen(PORT, () => {
