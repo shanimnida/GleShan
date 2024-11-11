@@ -1,17 +1,13 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 const express = require('express');
-const bodyParser = require('body-parser');
-const path = require('path');
 const Token = require('./models/Token');
 const User = require('./models/User');
 const bcrypt = require('bcrypt');
-const cors = require('cors');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
-const validator = require('validator');
 const sgMail = require('@sendgrid/mail');
 
 
