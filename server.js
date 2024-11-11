@@ -15,13 +15,11 @@ const validator = require('validator');
 const sgMail = require('@sendgrid/mail');
 
 
-app.set('trust proxy', 1);
-
-
 // SendGrid setup
 sgMail.setApiKey(process.env.SENDGRID_API_KEY); 
 
 const app = express();
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on http://0.0.0.0:${PORT}`);
