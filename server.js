@@ -19,8 +19,8 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Server is running on http://0.0.0.0:${port}`);
 });
 
 
@@ -275,8 +275,8 @@ mongoose.connect(mongoUri, {
 })
     .then(() => {
         console.log('Connected to MongoDB');
-        app.listen(PORT, () => {
-            console.log(`Server is running on http://localhost:${PORT}`);
+        app.listen(port, '0.0.0.0', () => {
+          console.log(`Server is running on http://0.0.0.0:${port}`);
         });
     })
     .catch((err) => {
