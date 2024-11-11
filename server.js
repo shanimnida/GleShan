@@ -38,7 +38,7 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({ mongoUrl: mongoUri }),
+    store: MongoStore.create({ mongoUrl: mongoURI }),
     cookie: {
         secure: true,
         httpOnly: true,
@@ -268,7 +268,7 @@ app.post('/logout', (req, res) => {
 });
 
 
-mongoose.connect(mongoUri, { 
+mongoose.connect(mongoURI, { 
     ssl: true, // Ensure SSL is enabled
     tls: true, // Ensure TLS is enabled
     
