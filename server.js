@@ -10,6 +10,8 @@ const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const sgMail = require('@sendgrid/mail');
 const path = require('path');
+const { MongoClient } = require('mongodb');
+
 
 
 
@@ -266,21 +268,27 @@ app.post('/logout', (req, res) => {
 });
 
 
+async function connectDB() {
+  const uri = mongoURI;
+  
+  const client = new MongoClient(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    ssl: true,
+    tls: true,
+    tlsAllowInvalidCertificates: false, 
+    retryWrites: true,
+    w: 'majority',
+  });
+  
+  try {
+    await client.connect();
+    console.log("Successfully connected to MongoDB");
+  } catch (err) {
+    console.error("Failed to connect:", err);
+  } finally {
+    await client.close();
+  }
+}
 
-
-mongoose.set('strictQuery', true);
-mongoose.connect(mongoURI, { 
-    ssl: true, // Ensure SSL is enabled
-    tls: true, // Ensure TLS is enabled
-    
-})
-    .then(() => {
-        console.log('Connected to MongoDB');
-        app.listen(PORT, '0.0.0.0', () => {
-          console.log(`Server is running on http://0.0.0.0:${PORT}`);
-        });
-    })
-    .catch((err) => {
-        console.error('Error connecting to MongoDB:', err);
-        process.exit(1); // Optional: exit the app on failure to connect to DB
-    });
+connectDB();
