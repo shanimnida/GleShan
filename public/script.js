@@ -14,10 +14,8 @@ function hideError(messageId) {
     }
 }
 
-
 //SIGNUP-----------------------------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', function() {
-    // Signup form handling
     const signupForm = document.getElementById('signup-form');
     const emailInputSignup = document.getElementById('email');
     const passFields = ['pass1', 'pass2'];
@@ -57,127 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-//LOGIN-----------------------------------------------------------------------------------------------------
-document.addEventListener('DOMContentLoaded', function() {
-    // Login form handling
-    const loginForm = document.getElementById('login-form');
-    const emailInputLogin = document.getElementById('email');
-    const loginErrorMessage = 'login_error_message';
-    const togglePassword = document.getElementById('togglePassword');
-
-    if (loginForm) {
-        loginForm.addEventListener('submit', submitLogin);
-    }
-
-    if (emailInputLogin) {
-        emailInputLogin.addEventListener('input', function() {
-            validateEmail(emailInputLogin.value, loginErrorMessage);
-        });
-    }
-
-    if (togglePassword) {
-        togglePassword.addEventListener('click', function() {
-            const passwordField = document.getElementById('password');
-            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordField.setAttribute('type', type); // Change input type
-        });
-    }
-});
-
-//FORGOT PASSWORD-------------------------------------------------------------------------------------------------------
-document.addEventListener('DOMContentLoaded', function () {
-    const forgotPasswordForm = document.getElementById('forgot-password-form');
-    const emailInput = document.getElementById('email');
-    const emailMessage = document.getElementById('email_message');
-    const submitButton = document.getElementById('submit-button');
-
-    // Handle form submission
-    if (forgotPasswordForm) {
-        forgotPasswordForm.addEventListener('submit', function (event) {
-            event.preventDefault();
-            const email = emailInput.value;
-
-            // Clear previous error messages
-            emailMessage.style.display = 'none';
-            submitButton.disabled = true;
-
-            // Send request to server to send reset token
-            fetch('/forgot-password', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: email })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(data => { throw new Error(data.message || 'Error sending reset token'); });
-                }
-                return response.json();
-            })
-            .then(data => {
-                alert('Reset token sent to your email.');
-                window.location.href = 'reset-password.html'; // Redirect to reset password page
-            })
-            .catch(error => {
-                emailMessage.textContent = error.message;
-                emailMessage.style.display = 'block';
-                console.error('Error:', error);
-                submitButton.disabled = false; // Re-enable submit button
-            });
-        });
-    }
-});
-
-//RESET PASSWORD--------------------------------------------------------------------------------------------------------
-document.addEventListener('DOMContentLoaded', function() {
-    // Reset password form handling
-    const resetForm = document.getElementById('reset-password-form');
-    const tokenInput = document.getElementById('reset-token');
-    const passwordInput = document.getElementById('new-password');
-    const confirmPasswordInput = document.getElementById('confirm-password');
-    const togglePassword1 = document.getElementById('togglePassword1');
-    const togglePassword2 = document.getElementById('togglePassword2');
-    const tokenMessage = document.getElementById('token_message');
-    const verifyMessage = document.getElementById('verify_message');
-
-    // Submit event listener for reset password form
-    if (resetForm) {
-        resetForm.addEventListener('submit', submitResetPassword);
-    }
-
-    // Event listener for token input (if needed for validation)
-    if (tokenInput) {
-        tokenInput.addEventListener('input', function() {
-            // You can add token validation logic here if necessary
-        });
-    }
-
-    // Toggle password visibility for new password field
-    if (togglePassword1 && passwordInput) {
-        togglePassword1.addEventListener('click', function() {
-            togglePasswordVisibility(passwordInput);
-        });
-    }
-
-    // Toggle password visibility for confirm password field
-    if (togglePassword2 && confirmPasswordInput) {
-        togglePassword2.addEventListener('click', function() {
-            togglePasswordVisibility(confirmPasswordInput);
-        });
-    }
-
-    // Check password strength or matching
-    if (passwordInput) {
-        passwordInput.addEventListener('input', checkPasswordStrength);
-    }
-
-    if (confirmPasswordInput) {
-        confirmPasswordInput.addEventListener('input', checkPasswordMatch);
-    }
-});
-
-
 //SIGN UP FUNCTIONS------------------------------------------------------------------------------------------
-
 function isValidEmailFormat(email) {
     return /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
 }
@@ -262,6 +140,34 @@ function submitSignUp(event) {
     });
 }
 
+
+//LOGIN-----------------------------------------------------------------------------------------------------
+document.addEventListener('DOMContentLoaded', function() {
+    const loginForm = document.getElementById('login-form');
+    const emailInputLogin = document.getElementById('email');
+    const loginErrorMessage = 'login_error_message';
+    const togglePassword = document.getElementById('togglePassword');
+
+    if (loginForm) {
+        loginForm.addEventListener('submit', submitLogin);
+    }
+
+    if (emailInputLogin) {
+        emailInputLogin.addEventListener('input', function() {
+            validateEmail(emailInputLogin.value, loginErrorMessage);
+        });
+    }
+
+    if (togglePassword) {
+        togglePassword.addEventListener('click', function() {
+            const passwordField = document.getElementById('password');
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type); // Change input type
+        });
+    }
+});
+
+
 //LOG IN FUNCTIONS------------------------------------------------------------------------------------------
 function submitLogin(event) {
     event.preventDefault();
@@ -311,8 +217,88 @@ function validateEmail(email, messageId) {
 }
 
 
-//RESET PASSWORD FUNCTIONS------------------------------------------------------------------------------------------
+//FORGOT PASSWORD-------------------------------------------------------------------------------------------------------
+document.addEventListener('DOMContentLoaded', function () {
+    const forgotPasswordForm = document.getElementById('forgot-password-form');
+    const emailInput = document.getElementById('email');
+    const emailMessage = document.getElementById('email_message');
+    const submitButton = document.getElementById('submit-button');
 
+    if (forgotPasswordForm) {
+        forgotPasswordForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const email = emailInput.value;
+
+            emailMessage.style.display = 'none';
+            submitButton.disabled = true;
+
+            fetch('/forgot-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => { throw new Error(data.message || 'Error sending reset token'); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('Reset token sent to your email.');
+                window.location.href = 'reset-password.html'; // Redirect to reset password page
+            })
+            .catch(error => {
+                emailMessage.textContent = error.message;
+                emailMessage.style.display = 'block';
+                console.error('Error:', error);
+                submitButton.disabled = false; // Re-enable submit button
+            });
+        });
+    }
+});
+
+//RESET PASSWORD--------------------------------------------------------------------------------------------------------
+document.addEventListener('DOMContentLoaded', function() {
+    const resetForm = document.getElementById('reset-password-form');
+    const tokenInput = document.getElementById('reset-token');
+    const passwordInput = document.getElementById('new-password');
+    const confirmPasswordInput = document.getElementById('confirm-password');
+    const togglePassword1 = document.getElementById('togglePassword1');
+    const togglePassword2 = document.getElementById('togglePassword2');
+    const tokenMessage = document.getElementById('token_message');
+    const verifyMessage = document.getElementById('verify_message');
+
+    if (resetForm) {
+        resetForm.addEventListener('submit', submitResetPassword);
+    }
+
+    if (tokenInput) {
+        tokenInput.addEventListener('input', function() {
+        });
+    }
+
+    if (togglePassword1 && passwordInput) {
+        togglePassword1.addEventListener('click', function() {
+            togglePasswordVisibility(passwordInput);
+        });
+    }
+
+    if (togglePassword2 && confirmPasswordInput) {
+        togglePassword2.addEventListener('click', function() {
+            togglePasswordVisibility(confirmPasswordInput);
+        });
+    }
+
+    if (passwordInput) {
+        passwordInput.addEventListener('input', checkPasswordStrength);
+    }
+
+    if (confirmPasswordInput) {
+        confirmPasswordInput.addEventListener('input', checkPasswordMatch);
+    }
+});
+
+//RESET PASSWORD FUNCTIONS------------------------------------------------------------------------------------------
 function togglePasswordVisibility(inputField) {
     const type = inputField.getAttribute('type') === 'password' ? 'text' : 'password';
     inputField.setAttribute('type', type);
@@ -373,7 +359,7 @@ function submitResetPassword(event) {
     .then(data => {
         if (data.success) {
             alert('Password reset successful!');
-            window.location.href = 'login.html'; // Redirect to login page after successful reset
+            window.location.href = 'login.html';
         } else {
             showError('token_message', data.message || 'Reset token invalid or expired');
         }
@@ -390,12 +376,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const logoutLink = document.getElementById('logoutLink');
     const userEmailElement = document.getElementById('userEmail');
     
-    // Fetch user details only if the user is logged in
     if (userEmailElement) {
         fetchUserDetails();
     }
 
-    // Add logout event listener, but only if the logout link exists
     if (logoutLink) {
         logoutLink.addEventListener('click', function (event) {
             event.preventDefault();
@@ -433,7 +417,7 @@ async function performLogout() {
         });
 
         if (response.ok) {
-            window.location.href = 'login.html'; // Redirect to login page after logout
+            window.location.href = 'login.html';
         } else {
             console.error('Logout failed');
         }
