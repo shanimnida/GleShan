@@ -273,6 +273,8 @@ async function connectDB() {
     const client = new MongoClient(uri, {
       retryWrites: true,
       w: 'majority',
+      connectTimeoutMS: 1000000,
+      serverSelectionTimeoutMS: 1000000
     });
   
     try {
