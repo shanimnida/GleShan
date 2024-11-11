@@ -29,9 +29,9 @@ document.addEventListener('DOMContentLoaded', () => {
 //DASHBOARD-----------------------------------------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', function () {
     const logoutLink = document.getElementById('logoutLink');
-    const userNameElement = document.getElementById('userName');
+    const userEmailElement = document.getElementById('userEmail');
     
-    if (userNameElement) {
+    if (userEmailElement) {
         fetchUserDetails();
     }
 
@@ -54,8 +54,8 @@ async function fetchUserDetails() {
         const data = await response.json();
         console.log(data);
 
-        if (data.success && document.getElementById('userName')) {
-            document.getElementById('userName').textContent = data.user.name;
+        if (data.success && document.getElementById('userEmail')) {
+            document.getElementById('userEmail').textContent = data.user.email;
         } else {
             console.error('Failed to fetch user details:', data.message);
         }

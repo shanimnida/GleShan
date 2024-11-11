@@ -125,7 +125,7 @@ ul li {
 
 .movie-list {
   display: flex;
-  gap: 20px;
+  gap: 40px;
   overflow-x: auto;
   padding: 10px 0;
   scroll-behavior: smooth; /* Smooth horizontal scroll */
