@@ -267,28 +267,25 @@ app.post('/logout', (req, res) => {
     });
 });
 
-
 async function connectDB() {
-  const uri = mongoURI;
+    const uri = process.env.MONGODB_URI;
+    
+    const client = new MongoClient(uri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      retryWrites: true,
+      w: 'majority',
+    });
   
-  const client = new MongoClient(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    ssl: true,
-    tls: true,
-    tlsAllowInvalidCertificates: false, 
-    retryWrites: true,
-    w: 'majority',
-  });
-  
-  try {
-    await client.connect();
-    console.log("Successfully connected to MongoDB");
-  } catch (err) {
-    console.error("Failed to connect:", err);
-  } finally {
-    await client.close();
+    try {
+      await client.connect();
+      console.log("Successfully connected to MongoDB");
+    } catch (err) {
+      console.error("Failed to connect:", err);
+    } finally {
+      await client.close();
+    }
   }
-}
+  
 
 connectDB();
