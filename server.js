@@ -9,7 +9,6 @@ const MongoStore = require('connect-mongo');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const sgMail = require('@sendgrid/mail');
-const bodyParser = require('body-parser');
 
 
 // SendGrid setup
@@ -65,8 +64,6 @@ const isAuthenticated = (req, res, next) => {
     }
 };
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
