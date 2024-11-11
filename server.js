@@ -18,14 +18,15 @@ const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY); 
 
 const app = express();
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+const PORT = process.env.PORT || 3000;
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
+app.use(express.static('public'));
+
+
 
 // MongoDB URI for session management
 const mongoUri = process.env.MONGODB_URI;
@@ -46,7 +47,7 @@ app.use(session({
 // Rate Limiting for Login Route
 const loginLimiter = rateLimit({
     windowMs: 30 * 60 * 1000,
-    max: 5,
+    max: 20,
     message: 'Too many login attempts, please try again after 30 minutes.',
     handler: (req, res, next, options) => {
         res.status(options.statusCode).json({ success: false, message: options.message });
@@ -62,11 +63,15 @@ const isAuthenticated = (req, res, next) => {
     }
 };
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use(express.static('public'));
 
-// Serve pages
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'login.html')); // Serve your login page
+});
+
+
 app.get('/forgot-password', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'forgot-password.html'));
 });
@@ -210,21 +215,30 @@ app.post('/login', loginLimiter, async (req, res) => {
     const { email, password } = req.body;
 
     try {
+        // Check if both email and password are provided
         if (!email || !password) {
             return res.status(400).json({ success: false, message: 'Email and password are required.' });
         }
 
-        if (!validator.isEmail(email)) {
-            return res.status(400).json({ success: false, message: 'Invalid email format.' });
+        // Normalize email (case-insensitive) for searching
+        const normalizedEmail = email.toLowerCase();
+
+        // Look for the user in the database using email
+        const user = await User.findOne({ emaildb: normalizedEmail });
+        if (!user) {
+            return res.status(400).json({ success: false, message: 'Invalid email or password.' });
         }
 
-        const user = await User.findOne({ emaildb: email });
-        if (!user) return res.status(400).json({ success: false, message: 'Invalid email or password.' });
-
+        // Compare the password with the hashed password in the database
         const passwordMatch = await bcrypt.compare(password, user.password);
-        if (!passwordMatch) return res.status(400).json({ success: false, message: 'Invalid email or password.' });
+        if (!passwordMatch) {
+            return res.status(400).json({ success: false, message: 'Invalid email or password.' });
+        }
 
+        // Set the session if login is successful
         req.session.userId = user._id;
+
+        // Respond with success message and user details (email)
         res.status(200).json({ success: true, message: 'Login successful.', user: { email: user.emaildb } });
     } catch (error) {
         console.error('Error logging in:', error);
@@ -241,10 +255,14 @@ app.post('/logout', (req, res) => {
             return res.status(500).json({ success: false, message: 'Error logging out' });
         }
 
+        // Clear the session cookie by setting an expiration date in the past
+        res.clearCookie('connect.sid'); // 'connect.sid' is the default session cookie name in Express
+
         // Send success response after logout
         res.status(200).json({ success: true, message: 'Logged out successfully' });
     });
 });
+
 
 mongoose.connect(mongoUri, { 
     ssl: true // Ensure SSL is enabled

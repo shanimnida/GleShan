@@ -8,16 +8,19 @@
 </head>
 <body>
     <div class="login-box">
-        <form class="login-form" id="login-form" onsubmit="submitLogin(event)">
+        <form class="login-form" id="login-form">
             <h1>Sign In</h1>
-            <input type="text" name="email" id="email" placeholder="Email" required oninput="validateEmail(event.target.value, 'login_message')">
-            <h3 id="login_message" class="error-message" style="color: red; display: none;"></h3>
+            <input type="email" name="email" id="email" placeholder="Email" required>
+
+            <h3 id="login_error_message" class="error-message" style="color: red; display: none;"></h3>
+
             <div class="password-container">
                 <input type="password" name="password" id="password" placeholder="Password" required minlength="8">
-                <span class="toggle-password" onclick="togglePassword('password')">👁</span>
+                <span class="toggle-password" id="togglePassword">👁</span>
             </div>
-            <h3 id="login_error_message" class="error-message" style="color: red; display: none;"></h3>
+
             <button type="submit" class="login-button">Sign In</button>
+
             <div class="login-help">
                 <label>
                     <input type="checkbox" id="rememberMe"> Remember Me
@@ -30,6 +33,6 @@
         </form>
     </div>
 
-    <script src="script.js"></script>
+    <script src="/script.js"></script>
 </body>
 </html>
