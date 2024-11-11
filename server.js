@@ -11,26 +11,20 @@ const helmet = require('helmet');
 const sgMail = require('@sendgrid/mail');
 const path = require('path');
 
-
-
-
 // SendGrid setup
-sgMail.setApiKey(process.env.SENDGRID_API_KEY); 
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const app = express();
-app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3000;
+app.set('trust proxy', 1);
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on http://0.0.0.0:${PORT}`);
 });
-
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(express.static('public'));
-
-
 
 // MongoDB URI for session management
 const mongoURI = process.env.MONGODB_URI;
@@ -67,13 +61,10 @@ const isAuthenticated = (req, res, next) => {
     }
 };
 
-
-app.use(express.static(path.join(__dirname, 'public')));
-
+// Serve HTML files
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'login.html')); // Serve your login page
+    res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
-
 
 app.get('/forgot-password', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'forgot-password.html'));
@@ -139,7 +130,6 @@ app.post('/forgot-password', async (req, res) => {
             html: `<p>Your password reset token is:</p><h3>${resetToken}</h3>`
         };
 
-        // Sending email with SendGrid
         await sgMail.send(msg);
         res.status(200).json({ success: true, message: 'Password reset email sent successfully' });
     } catch (error) {
@@ -195,7 +185,6 @@ app.post('/signup', async (req, res) => {
             return res.status(400).json({ success: false, message: 'Email already registered.' });
         }
 
-        // Step 4: Hash password and create new user
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new User({
             emaildb: email,
@@ -218,30 +207,23 @@ app.post('/login', loginLimiter, async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        // Check if both email and password are provided
         if (!email || !password) {
             return res.status(400).json({ success: false, message: 'Email and password are required.' });
         }
 
-        // Normalize email (case-insensitive) for searching
         const normalizedEmail = email.toLowerCase();
-
-        // Look for the user in the database using email
         const user = await User.findOne({ emaildb: normalizedEmail });
         if (!user) {
             return res.status(400).json({ success: false, message: 'Invalid email or password.' });
         }
 
-        // Compare the password with the hashed password in the database
         const passwordMatch = await bcrypt.compare(password, user.password);
         if (!passwordMatch) {
             return res.status(400).json({ success: false, message: 'Invalid email or password.' });
         }
 
-        // Set the session if login is successful
         req.session.userId = user._id;
 
-        // Respond with success message and user details (email)
         res.status(200).json({ success: true, message: 'Login successful.', user: { email: user.emaildb } });
     } catch (error) {
         console.error('Error logging in:', error);
@@ -251,21 +233,18 @@ app.post('/login', loginLimiter, async (req, res) => {
 
 // Logout Route
 app.post('/logout', (req, res) => {
-    // Destroy the session to log the user out
     req.session.destroy((err) => {
         if (err) {
             console.error('Error destroying session:', err);
             return res.status(500).json({ success: false, message: 'Error logging out' });
         }
 
-        // Clear the session cookie by setting an expiration date in the past
-        res.clearCookie('connect.sid'); // 'connect.sid' is the default session cookie name in Express
-
-        // Send success response after logout
+        res.clearCookie('connect.sid');
         res.status(200).json({ success: true, message: 'Logged out successfully' });
     });
 });
 
+// Connect to MongoDB
 mongoose.connect(mongoURI)
     .then(() => {
         console.log('Connected to MongoDB');
