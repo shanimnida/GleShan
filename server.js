@@ -10,7 +10,6 @@ const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const sgMail = require('@sendgrid/mail');
 const path = require('path');
-const { MongoClient } = require('mongodb');
 
 
 
@@ -42,7 +41,7 @@ app.use(session({
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: mongoURI }),
     cookie: {
-        secure: true,
+        secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
         sameSite: 'lax',
         maxAge: 30 * 60 * 1000
@@ -267,25 +266,9 @@ app.post('/logout', (req, res) => {
     });
 });
 
-async function connectDB() {
-    const uri = process.env.MONGODB_URI;
-    
-    const client = new MongoClient(uri, {
-      retryWrites: true,
-      w: 'majority',
-      connectTimeoutMS: 1000000,
-      serverSelectionTimeoutMS: 1000000
-    });
-  
-    try {
-      await client.connect();
-      console.log("Successfully connected to MongoDB");
-    } catch (err) {
-      console.error("Failed to connect:", err);
-    } finally {
-      await client.close();
-    }
-  }
-  
-
-connectDB();
+mongoose.connect(mongoURI)
+    .then(() => {
+        console.log('Connected to MongoDB');
+        app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    })
+    .catch(err => console.log('Error connecting to MongoDB:', err));
