@@ -37,7 +37,7 @@ app.use(session({
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: mongoUri }),
     cookie: {
-        secure: false,
+        secure: true,
         httpOnly: true,
         sameSite: 'lax',
         maxAge: 30 * 60 * 1000
@@ -266,6 +266,8 @@ app.post('/logout', (req, res) => {
 
 mongoose.connect(mongoUri, { 
     ssl: true // Ensure SSL is enabled
+    useNewUrlParser: true,
+    useUnifiedTopology: true
 })
     .then(() => {
         console.log('Connected to MongoDB');
