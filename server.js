@@ -19,6 +19,9 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
 
 
 app.use(express.json());
@@ -63,7 +66,8 @@ const isAuthenticated = (req, res, next) => {
     }
 };
 
-
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -264,7 +268,11 @@ app.post('/logout', (req, res) => {
 });
 
 
-mongoose.connect(mongoUri)
+mongoose.connect(mongoUri, { 
+    ssl: true, // Ensure SSL is enabled
+    tls: true, // Ensure TLS is enabled
+    
+})
     .then(() => {
         console.log('Connected to MongoDB');
         app.listen(PORT, () => {
