@@ -18,91 +18,98 @@ function hideError(messageId) {
 document.addEventListener('DOMContentLoaded', function() {
     const signupForm = document.getElementById('signup-form');
     const emailInputSignup = document.getElementById('email');
-    const passFields = ['pass1', 'pass2'];
     const togglePass1 = document.getElementById('toggle-pass1');
     const togglePass2 = document.getElementById('toggle-pass2');
+    const passwordInput = document.getElementById('pass1');
+    const confirmPasswordInput = document.getElementById('pass2');
 
     if (signupForm) {
-        signupForm.addEventListener('submit', submitSignUp);
+        signupForm.addEventListener('submit', submitSignUpForm);
     }
 
     if (emailInputSignup) {
         emailInputSignup.addEventListener('input', function() {
-            validateEmail(emailInputSignup.value, 'signup_error_message');
+            validateEmailFormatForSignUp(emailInputSignup.value, 'signup_error_message');
         });
     }
 
-    passFields.forEach(field => {
-        const passField = document.getElementById(field);
-        if (passField) {
-            passField.addEventListener('input', function() {
-                verifyPassword();
-                checkPasswordStrength(this.value);
-            });
-        }
-    });
+    if (passwordInput) { 
+        passwordInput.addEventListener('input', function() {
+            checkSignupPasswordStrength(passwordInput.value);
+        });
+    }
 
-    if (togglePass1) {
+    if (confirmPasswordInput) {
+        confirmPasswordInput.addEventListener('input', verifySignupPassword);
+    }
+
+    if (togglePass1 && passwordInput) {
         togglePass1.addEventListener('click', function() {
-            togglePassword('pass1');
+            togglePasswordVisibility(passwordInput);
         });
     }
 
-    if (togglePass2) {
+    if (togglePass2 && confirmPasswordInput) {
         togglePass2.addEventListener('click', function() {
-            togglePassword('pass2');
+            togglePasswordVisibility(confirmPasswordInput);
         });
     }
+
+
 });
 
 //SIGN UP FUNCTIONS------------------------------------------------------------------------------------------
-function isValidEmailFormat(email) {
+function validateEmailFormatForSignUp(email) {
     return /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
 }
 
-function verifyPassword() {
+function verifySignupPassword() {
     const newPassword = document.getElementById('pass1').value;
     const confirmPassword = document.getElementById('pass2').value;
     const messageId = 'verify_message';
-    hideError(messageId);
+    hideErrorMessage(messageId);
 
     if (newPassword !== confirmPassword) {
-        showError(messageId, "Passwords do not match.");
+        showErrorMessage(messageId, "Passwords do not match.");
         return false;
     } else if (newPassword.length < 8) {
-        showError(messageId, "Password must be at least 8 characters long.");
+        showErrorMessage(messageId, "Password must be at least 8 characters long.");
         return false;
     } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(newPassword)) {
-        showError(messageId, "Password must contain at least one special character.");
+        showErrorMessage(messageId, "Password must contain at least one special character.");
         return false;
     } else if (!/[0-9]/.test(newPassword)) {
-        showError(messageId, "Password must contain at least one number.");
+        showErrorMessage(messageId, "Password must contain at least one number.");
         return false;
     }
     return true;
 }
 
-function checkPasswordStrength(password) {
-    const strength = [/[A-Z]/, /[0-9]/, /[!@#$%^&*(),.?":{}|<>]/]
-        .filter(regex => regex.test(password)).length;
+function checkSignupPasswordStrength(password) {
+    const strengthMessage = document.getElementById('password_strength1');
     
-    const strengthText = ['Weak', 'Medium', 'Strong'][Math.min(strength, 2)];
-    const strengthColor = ['red', 'orange', 'green'][Math.min(strength, 2)];
+    // Check if the element exists before updating it
+    if (!strengthMessage) return;
 
-    const passwordStrength = document.getElementById("password_strength");
-    if (passwordStrength) {
-        passwordStrength.textContent = strengthText;
-        passwordStrength.style.color = strengthColor;
+    if (password.length < 8) {
+        strengthMessage.textContent = 'Password is too weak';
+        strengthMessage.style.color = 'red';
+    } else if (password.length >= 8 && password.length < 12) {
+        strengthMessage.textContent = 'Password is medium strength';
+        strengthMessage.style.color = 'orange';
+    } else {
+        strengthMessage.textContent = 'Password is strong';
+        strengthMessage.style.color = 'green';
     }
 }
 
-function togglePassword(inputId) {
-    const passwordInput = document.getElementById(inputId); 
-    const newInputType = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-    passwordInput.setAttribute('type', newInputType);
+function togglePasswordVisibility(inputId) {
+    const type = inputId.getAttribute('type') === 'password' ? 'text' : 'password';
+    inputId.setAttribute('type', type);
 }
 
-function submitSignUp(event) {
+
+function submitSignUpForm(event) {
     event.preventDefault();
 
     const fullName = document.getElementById('full_name').value;
@@ -110,7 +117,7 @@ function submitSignUp(event) {
     const email = document.getElementById('email').value;
     const password = document.getElementById('pass1').value;
 
-    if (!isValidEmailFormat(email) || !verifyPassword()) return;
+    if (!validateEmailFormatForSignUp(email) || !verifySignupPassword()) return;
 
     const payload = { full_name: fullName, mob_number: mobileNumber, email: email, password: password };
     let hasProcessed = false;
@@ -139,7 +146,6 @@ function submitSignUp(event) {
         alert('An error occurred. Please try again.');
     });
 }
-
 
 //LOGIN-----------------------------------------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', function() {
