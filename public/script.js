@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (emailInputSignup) {
         emailInputSignup.addEventListener('input', function() {
-            validateEmailFormatForSignUp(emailInputSignup.value, 'signup_error_message');
+            isValidEmailFormat(emailInputSignup.value, 'signup_error_message');
         });
     }
 
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 //SIGN UP FUNCTIONS------------------------------------------------------------------------------------------
-function validateEmailFormatForSignUp(email) {
+function isValidEmailFormat(email) {
     return /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
 }
 
@@ -67,19 +67,19 @@ function verifySignupPassword() {
     const newPassword = document.getElementById('pass1').value;
     const confirmPassword = document.getElementById('pass2').value;
     const messageId = 'verify_message';
-    hideErrorMessage(messageId);
+    hideError(messageId);
 
     if (newPassword !== confirmPassword) {
-        showErrorMessage(messageId, "Passwords do not match.");
+        showError(messageId, "Passwords do not match.");
         return false;
     } else if (newPassword.length < 8) {
-        showErrorMessage(messageId, "Password must be at least 8 characters long.");
+        showError(messageId, "Password must be at least 8 characters long.");
         return false;
     } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(newPassword)) {
-        showErrorMessage(messageId, "Password must contain at least one special character.");
+        showError(messageId, "Password must contain at least one special character.");
         return false;
     } else if (!/[0-9]/.test(newPassword)) {
-        showErrorMessage(messageId, "Password must contain at least one number.");
+        showError(messageId, "Password must contain at least one number.");
         return false;
     }
     return true;
@@ -91,11 +91,15 @@ function checkSignupPasswordStrength(password) {
     // Check if the element exists before updating it
     if (!strengthMessage) return;
 
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    
+    // Length check
     if (password.length < 8) {
         strengthMessage.textContent = 'Password is too weak';
         strengthMessage.style.color = 'red';
-    } else if (password.length >= 8 && password.length < 12) {
-        strengthMessage.textContent = 'Password is medium strength';
+    } else if (!hasSpecialChar || !hasNumber) {
+        strengthMessage.textContent = 'Password must contain at least one special character and one number.';
         strengthMessage.style.color = 'orange';
     } else {
         strengthMessage.textContent = 'Password is strong';
@@ -117,7 +121,7 @@ function submitSignUpForm(event) {
     const email = document.getElementById('email').value;
     const password = document.getElementById('pass1').value;
 
-    if (!validateEmailFormatForSignUp(email) || !verifySignupPassword()) return;
+    if (!isValidEmailFormat(email) || !verifySignupPassword()) return;
 
     const payload = { full_name: fullName, mob_number: mobileNumber, email: email, password: password };
     let hasProcessed = false;
@@ -313,9 +317,17 @@ function togglePasswordVisibility(inputField) {
 function checkPasswordStrength() {
     const password = document.getElementById('new-password').value;
     const strengthMessage = document.getElementById('password_strength');
+
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+
+    // Check password length and composition
     if (password.length < 8) {
         strengthMessage.textContent = 'Password is too weak';
         strengthMessage.style.color = 'red';
+    } else if (!hasSpecialChar || !hasNumber) {
+        strengthMessage.textContent = 'Password must contain at least one special character and one number.';
+        strengthMessage.style.color = 'orange';
     } else {
         strengthMessage.textContent = 'Password is strong';
         strengthMessage.style.color = 'green';
