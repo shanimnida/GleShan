@@ -14,6 +14,10 @@ const helmet = require('helmet');
 const validator = require('validator');
 const sgMail = require('@sendgrid/mail');
 
+
+app.set('trust proxy', 1);
+
+
 // SendGrid setup
 sgMail.setApiKey(process.env.SENDGRID_API_KEY); 
 
@@ -268,6 +272,9 @@ app.post('/logout', (req, res) => {
 });
 
 
+
+
+mongoose.set('strictQuery', true);
 mongoose.connect(mongoURI, { 
     ssl: true, // Ensure SSL is enabled
     tls: true, // Ensure TLS is enabled
