@@ -6,12 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Netflix - Dashboard</title>
     <link rel="stylesheet" href="dashboard.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
 <body>
     <header>
-        <img src="" alt="Netflix Logo">
+        <img src="logo.png" alt="Netflix Logo">
         <nav>
             <a href="#">Home</a>
             <a href="#">TV Shows</a>
@@ -21,15 +20,13 @@
         </nav>
         <ul>
             <li>
-                <a href="#" id="logoutLink" class="logout-button" title="Logout">
-                    <span class="material-icons">logout</span> Logout
-                </a>
+                <a href="#" id="logoutLink" class="logout-button" title="Logout">Logout</a>
             </li>
         </ul>
     </header>
 
     <div class="sidebar-welcome">
-        <h2>Hello, <span id="userEmail">[User's Email]</span>!</h2>
+        <h2>Hello, <span id="userName">[User]</span>!</h2>
     </div>
 
     <div class="hero">
@@ -40,22 +37,64 @@
         <div class="featured">
             <h2>Featured Movies</h2>
             <div class="movie-list">
-                <!-- Example movie posters -->
                 <div class="movie">
-                    <img src="" alt="Movie Poster">
+                    <img src="independence.jpg" alt="Movie Poster">
+                    <video width="200px" loop>
+                        <source src="independence.mp4" type="video/mp4">
+                    </video>
                 </div>
+
                 <div class="movie">
-                    <img src="" alt="Movie Poster">
+                    <img src="wakeup.jpg" alt="Movie Poster">
+                    <video width="200px" loop>
+                        <source src="wakeup.mp4" type="video/mp4">
+                    </video>
                 </div>
+
                 <div class="movie">
-                    <img src="" alt="Movie Poster">
+                    <img src="emotions.jpg" alt="Movie Poster">
+                    <video width="200px" loop>
+                        <source src="emotions.mp4" type="video/mp4">
+                    </video>
                 </div>
+
+                <div class="movie">
+                    <img src="lamok.jpg" alt="Movie Poster">
+                    <video width="200px" loop>
+                        <source src="lamok.mp4" type="video/mp4">
+                    </video>
+                </div>
+
+                <div class="movie">
+                    <img src="icecream.jpg" alt="Movie Poster">
+                    <video width="200px" loop>
+                        <source src="icecream.mp4" type="video/mp4">
+                    </video>
+                </div>
+
+                <div class="movie">
+                    <img src="titanic.jpg" alt="Movie Poster">
+                    <video width="200px" loop>
+                        <source src="titanic.mp4" type="video/mp4">
+                    </video>
+                </div>
+
+
+                <div class="movie">
+                    <img src="pain.jpg" alt="Movie Poster">
+                    <video width="200px" loop>
+                        <source src="pain.mp4" type="video/mp4">
+                    </video>
+                </div>
+
+                
+
 
             </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="dashboard.js"></script>
 </body>
 
 </html>

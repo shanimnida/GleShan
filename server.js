@@ -222,7 +222,13 @@ app.post('/login', loginLimiter, async (req, res) => {
             return res.status(400).json({ success: false, message: 'Invalid email or password.' });
         }
 
-        req.session.userId = user._id;
+        // Inside login route:
+        req.session.user = {
+            _id: user._id,
+            full_name: user.full_name,
+            emaildb: user.emaildb
+        };
+
 
         res.status(200).json({ success: true, message: 'Login successful.', user: { email: user.emaildb } });
     } catch (error) {
@@ -230,6 +236,33 @@ app.post('/login', loginLimiter, async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal server error.' });
     }
 });
+
+app.get('/user-details', async (req, res) => {
+    try {
+        // Check if the user is authenticated by verifying the session
+        if (!req.session.user) { 
+            return res.status(401).json({ success: false, message: 'User not authenticated' });
+        }
+
+        const user = await User.findById(req.session.user._id); 
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        res.json({
+            success: true,
+            user: {
+                full_name: user.full_name,  // Display the full name
+                email: user.emaildb,        // Display the email
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching user details:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
 
 // Logout Route
 app.post('/logout', (req, res) => {
