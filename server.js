@@ -269,6 +269,5 @@ app.post('/logout', (req, res) => {
 mongoose.connect(mongoURI)
     .then(() => {
         console.log('Connected to MongoDB');
-        app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
     })
     .catch(err => console.log('Error connecting to MongoDB:', err));
