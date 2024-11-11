@@ -265,7 +265,7 @@ app.post('/logout', (req, res) => {
 
 
 mongoose.connect(mongoUri, { 
-    ssl: true // Ensure SSL is enabled
+    ssl: true,
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
