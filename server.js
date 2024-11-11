@@ -265,7 +265,10 @@ app.post('/logout', (req, res) => {
 
 
 mongoose.connect(mongoUri, { 
-    ssl: true // Ensure SSL is enabled
+    useNewUrlParser: true, 
+    useUnifiedTopology: true, 
+    useFindAndModify: false, // Optional: If you use this, it suppresses deprecation warning
+    useCreateIndex: true, // Optional: If you use this, it suppresses deprecation warning
 })
     .then(() => {
         console.log('Connected to MongoDB');
