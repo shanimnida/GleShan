@@ -81,10 +81,13 @@ ul li {
 
 .sidebar-welcome {
   padding: 20px;
-  background-color: #333;
   margin-top: 20px;
   text-align: center;
   border-radius: 8px;
+  width: 20%;
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .sidebar-welcome h2 {
@@ -95,7 +98,7 @@ ul li {
 .hero {
   position: relative;
   height: 60vh;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8)), url('login_background.jpg') center center/cover no-repeat;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8)), url('/media/login_background.jpg') center center/cover no-repeat;
   display: flex;
   justify-content: center;
   align-items: center;

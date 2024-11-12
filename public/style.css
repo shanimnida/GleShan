@@ -1,9 +1,8 @@
-/* Full-Page Background */
 body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background: url('login_background.jpg') no-repeat center center fixed;
+    background: url('/media/login_background.jpg') no-repeat center center fixed;
     background-size: cover;
     height: 100vh;
     display: flex;
@@ -12,25 +11,22 @@ body {
     color: rgb(150, 150, 150); 
 }
 
-/* Centered Box Styles */
 .signup-box, .login-box, .forgot-password-box, .reset-password-box {
     background-color: rgba(0, 0, 0, 0.75);
-    padding: 60px 68px; /* You can adjust padding if needed */
+    padding: 60px 68px;
     width: 100%;
-    max-width: 350px; /* Adjust max-width for reset-password-box if necessary */
+    max-width: 350px;
     border-radius: 8px;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.8);
 }
 
-/* Headings Styles */
 h1 {
     color: white;
-    margin-bottom: 28px; /* This is maintained for consistency across forms */
+    margin-bottom: 28px;
     font-size: 32px;
     font-weight: 700;
 }
 
-/* Input Field Styles */
 input[type="email"],
 input[type="password"],
 input[type="text"],
@@ -50,7 +46,6 @@ input::placeholder {
     color: #8c8c8c; 
 }
 
-/* Button Styles */
 .signup-button, .login-button, .reset-button {
     width: 100%;
     padding: 16px;
@@ -68,7 +63,6 @@ input::placeholder {
     background-color: #f6121d;
 }
 
-/* Error Message Styles */
 .error-message, h3 {
     color: red; 
     font-size: 13px;
@@ -76,7 +70,6 @@ input::placeholder {
     display: none; 
 }
 
-/* Login/Signup Link Section */
 .login-link, .signup-link {
     text-align: left;
     margin-top: 16px;
@@ -98,7 +91,6 @@ input::placeholder {
     text-decoration: underline; 
 }
 
-/* Login Help Section */
 .login-help {
     display: flex;
     justify-content: space-between;
@@ -116,7 +108,6 @@ input::placeholder {
     text-decoration: underline; 
 }
 
-/* Toggle Password Visibility */
 .password-container {
     position: relative;
     margin: 10px 0;
@@ -136,7 +127,6 @@ input::placeholder {
     color: white; 
 }
 
-/* Forgot Password Box Styles */
 .forgot-password-box {
     text-align: center;
 }
