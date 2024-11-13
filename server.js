@@ -64,11 +64,6 @@ const isAuthenticated = (req, res, next) => {
 };
 
 // Serve HTML files
-
-app.use((req, res, next) => {
-    res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
-});
-
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
@@ -83,6 +78,10 @@ app.get('/reset-password', (req, res) => {
 
 app.get('/dashboard', isAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'private', 'dashboard.html'));
+});
+
+app.use((req, res, next) => {
+    res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
 });
 
 // Fetch user details
