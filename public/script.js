@@ -205,7 +205,7 @@ function submitLogin(event) {
     .then(data => {
         if (data.success) {
             alert('Login successful! Redirecting...');
-            window.location.href = 'dashboard.html';
+            window.location.href = '/dashboard';
         } else {
             showError('login_error_message', data.message);
         }

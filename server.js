@@ -226,7 +226,7 @@ app.post('/login', loginLimiter, async (req, res) => {
 
         req.session.userId = user._id;
 
-        res.redirect('/dashboard');
+        res.status(200).json({ success: true, message: 'Login successful.', user: { email: user.emaildb } });
 
         
     } catch (error) {
