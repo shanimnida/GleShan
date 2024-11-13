@@ -80,9 +80,7 @@ app.get('/dashboard', isAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'private', 'dashboard.html'));
 });
 
-app.use((req, res, next) => {
-    res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
-});
+
 
 // Fetch user details
 app.get('/user-details', async (req, res) => {
@@ -98,6 +96,10 @@ app.get('/user-details', async (req, res) => {
         console.error(error);
         res.status(500).json({ success: false, message: 'Server error' });
     }
+});
+
+app.use((req, res, next) => {
+    res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
 });
 
 // Generate random string for token
@@ -220,21 +222,17 @@ app.post('/login', loginLimiter, async (req, res) => {
         const normalizedEmail = email.toLowerCase();
         const user = await User.findOne({ emaildb: normalizedEmail });
         
-        // Check if user exists
         if (!user) {
             return res.status(400).json({ success: false, message: 'Invalid email or password.' });
         }
 
-        // Compare password with hashed password
         const passwordMatch = await bcrypt.compare(password, user.password);
         if (!passwordMatch) {
             return res.status(400).json({ success: false, message: 'Invalid email or password.' });
         }
 
-        // Set the session userId for logged-in user
         req.session.userId = user._id;
 
-        // Send successful response with user info (excluding sensitive data)
         res.status(200).json({
             success: true,
             message: 'Login successful.',
