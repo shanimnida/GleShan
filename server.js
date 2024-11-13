@@ -82,6 +82,7 @@ app.get('/dashboard', isAuthenticated, (req, res) => {
 
 
 
+
 // Fetch user details
 app.get('/user-details', async (req, res) => {
     try {
@@ -98,9 +99,6 @@ app.get('/user-details', async (req, res) => {
     }
 });
 
-app.use((req, res, next) => {
-    res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
-});
 
 // Generate random string for token
 const generateRandomString = (length) => {
@@ -261,6 +259,11 @@ app.post('/logout', (req, res) => {
         res.status(200).json({ success: true, message: 'Logged out successfully' });
     });
 });
+
+app.use((req, res, next) => {
+    res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
+});
+
 
 // Connect to MongoDB
 mongoose.connect(mongoURI)
