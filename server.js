@@ -24,6 +24,8 @@ app.listen(PORT, '0.0.0.0', () => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
+
+
 app.use(express.static('public'));
 
 // MongoDB URI for session management
@@ -75,7 +77,7 @@ app.get('/reset-password', (req, res) => {
 });
 
 app.get('/dashboard', isAuthenticated, (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+    res.sendFile(path.join(__dirname, 'private', 'dashboard.html'));
 });
 
 // Fetch user details
@@ -224,7 +226,9 @@ app.post('/login', loginLimiter, async (req, res) => {
 
         req.session.userId = user._id;
 
-        res.status(200).json({ success: true, message: 'Login successful.', user: { email: user.emaildb } });
+        res.redirect('/dashboard');
+
+        
     } catch (error) {
         console.error('Error logging in:', error);
         res.status(500).json({ success: false, message: 'Internal server error.' });

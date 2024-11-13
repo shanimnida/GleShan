@@ -1,1 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix - Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <img src="/media/logo.png" alt="Netflix Logo">
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">TV Shows</a>
+            <a href="#">Movies</a>
+            <a href="#">New & Popular</a>
+            <a href="#">My List</a>
+        </nav>
+        <ul>
+            <li>
+                <a href="#" id="logoutLink" class="logout-button" title="Logout">
+                    <span class="material-icons">logout</span> Logout
+                </a>
+            </li>
+        </ul>
+    </header>
+
+    <div class="sidebar-welcome">
+        <h2>Hello, <span id="userEmail">[User's Email]</span>!</h2>
+    </div>
+
+    <div class="hero">
+        <h1>Unlimited Movies, TV Shows, and More.</h1>
+    </div>
+
+    <div class="content">
+        <div class="featured">
+            <h2>Featured Movies</h2>
+            <div class="movie-list">
+                <div class="movie">
+                    <img src="/media/independence.jpg" alt="Movie Poster">
+                    <video width="200px" loop>
+                        <source src="/media/independence.mp4" type="video/mp4">
+                    </video>
+                </div>
+
+                <div class="movie">
+                    <img src="/media/wakeup.jpg" alt="Movie Poster">
+                    <video width="200px" loop>
+                        <source src="/media/wakeup.mp4" type="video/mp4">
+                    </video>
+                </div>
+
+                <div class="movie">
+                    <img src="/media/emotions.jpg" alt="Movie Poster">
+                    <video width="200px" loop>
+                        <source src="/media/emotions.mp4" type="video/mp4">
+                    </video>
+                </div>
+
+                <div class="movie">
+                    <img src="/media/lamok.jpg" alt="Movie Poster">
+                    <video width="200px" loop>
+                        <source src="/media/lamok.mp4" type="video/mp4">
+                    </video>
+                </div>
+
+                <div class="movie">
+                    <img src="/media/icecream.jpg" alt="Movie Poster">
+                    <video width="200px" loop>
+                        <source src="/media/icecream.mp4" type="video/mp4">
+                    </video>
+                </div>
+
+                <div class="movie">
+                    <img src="/media/titanic.jpg" alt="Movie Poster">
+                    <video width="200px" loop>
+                        <source src="/media/titanic.mp4" type="video/mp4">
+                    </video>
+                </div>
+
+
+                <div class="movie">
+                    <img src="/media/pain.jpg" alt="Movie Poster">
+                    <video width="200px" loop>
+                        <source src="/media/pain.mp4" type="video/mp4">
+                    </video>
+                </div>
+
+                
+
+
+            </div>
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+
+</html>
