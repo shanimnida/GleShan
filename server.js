@@ -57,7 +57,7 @@ const isAuthenticated = (req, res, next) => {
     if (req.session.userId) {
         return next();
     } else {
-        return res.status(401).json({ success: false, message: 'You are not authenticated.' });
+        return res.redirect('/');
     }
 };
 
@@ -74,7 +74,7 @@ app.get('/reset-password', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'reset-password.html'));
 });
 
-app.get('/dashboard', (req, res) => {
+app.get('/dashboard', isAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
 });
 
@@ -251,4 +251,7 @@ mongoose.connect(mongoURI)
     .then(() => {
         console.log('Connected to MongoDB');
     })
-    .catch(err => console.log('Error connecting to MongoDB:', err));
+    .catch(err => {
+        console.log('Error connecting to MongoDB:', err);
+        process.exit(1);
+    });
