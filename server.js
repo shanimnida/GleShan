@@ -219,20 +219,30 @@ app.post('/login', loginLimiter, async (req, res) => {
 
         const normalizedEmail = email.toLowerCase();
         const user = await User.findOne({ emaildb: normalizedEmail });
+        
+        // Check if user exists
         if (!user) {
             return res.status(400).json({ success: false, message: 'Invalid email or password.' });
         }
 
+        // Compare password with hashed password
         const passwordMatch = await bcrypt.compare(password, user.password);
         if (!passwordMatch) {
             return res.status(400).json({ success: false, message: 'Invalid email or password.' });
         }
 
+        // Set the session userId for logged-in user
         req.session.userId = user._id;
 
-        res.status(200).json({ success: true, message: 'Login successful.', user: { email: user.emaildb } });
+        // Send successful response with user info (excluding sensitive data)
+        res.status(200).json({
+            success: true,
+            message: 'Login successful.',
+            user: {
+                email: user.emaildb,
+            },
+        });
 
-        
     } catch (error) {
         console.error('Error logging in:', error);
         res.status(500).json({ success: false, message: 'Internal server error.' });
